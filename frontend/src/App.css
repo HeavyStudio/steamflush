@@ -1,0 +1,82 @@
+/* Import font families from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600&family=Rajdhani:wght@600;700&display=swap');
+
+:global(body) {
+  margin: 0;
+  /* Apply the main interface font globally */
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #1a1b26;
+  color: #a9b1d6;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.results h2 { 
+  font-family: 'Rajdhani', sans-serif;
+  color: #7aa2f7; 
+  margin: 0; 
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.actions-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.warning-text {
+  color: #e0af68;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Shared baseline button design */
+button {
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+button:disabled {
+  background-color: #4b5263;
+  cursor: not-allowed;
+  opacity: 0.6;
+  color: #ffffff;
+}
+
+.btn-danger-all {
+  background-color: #bb9af3;
+  color: #1a1b26;
+}
+
+.btn-danger-all:hover:not(:disabled) {
+  background-color: #a485dd;
+}
+
+.btn-refresh {
+  background-color: #7aa2f7;
+  color: #1a1b26;
+}
+
+.btn-refresh:hover:not(:disabled) {
+  background-color: #6593f5;
+}

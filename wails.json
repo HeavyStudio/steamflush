@@ -1,0 +1,14 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "steamflush",
+  "outputfilename": "steamflush",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "Jonathan Alfonso",
+    "email": "ajonathan34080@gmail.com"
+  },
+  "args": "-tags webkit2gtk_4_1"
+}
