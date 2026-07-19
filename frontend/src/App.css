@@ -85,6 +85,25 @@ button:disabled {
 }
 
 button:hover:not(:disabled) {
-    border: 2px solid #7aa2f7;
-    padding: 4px 12px;  
-  }
+  border: 2px solid #7aa2f7;
+  padding: 4px 12px;  
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.toolbar button {
+  background-color: #2b3d52;
+  color: #c6d4df;
+  border: 1px solid #4a5a6a;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background-color: #3b5066;
+}

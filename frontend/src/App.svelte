@@ -35,6 +35,13 @@
       <div class="results">
         <div class="results-header">
           <h2>Detected Orphan AppIDs ({appState.orphans.length})</h2>
+
+          <div class="toolbar">
+            <button onclick={() => appState.setSort('name')}>Name</button>
+            <button onclick={() => appState.setSort('size')}>Size</button>
+            <button onclick={() => appState.setSort('id')}>ID</button>
+          </div>
+
           <div class="actions-wrapper">
             <button class="btn-refresh" onclick={appState.refreshScan} disabled={appState.isLoading}>
               Scan
