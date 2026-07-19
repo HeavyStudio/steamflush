@@ -73,13 +73,13 @@
   }
 
   img, .folder-icon {
-    width: 80px; /* Steam headers are often more compact */
-    height: 45px;
+    width: 100px; /* Steam headers are often more compact */
+    height: 46px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 2px; /* Steam uses very little border radius */
-    object-fit: cover;
+    object-fit: contain;
     flex-shrink: 0;
   }
 
