@@ -40,10 +40,10 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 			}
 
 			// If the appmanifest_[appID].acf file does not exist, the game is uninstalled
-			//manifestPath := filepath.Join(s.info.AppsDir, "appmanifest_"+appID+".acf")
-			//if _, err := os.Stat(manifestPath); os.IsNotExist(err) {
-			orphans = append(orphans, appID)
-			//}
+			manifestPath := filepath.Join(s.info.AppsDir, "appmanifest_"+appID+".acf")
+			if _, err := os.Stat(manifestPath); os.IsNotExist(err) {
+				orphans = append(orphans, appID)
+			}
 		}
 	}
 
