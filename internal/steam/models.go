@@ -4,4 +4,5 @@ package steam
 type AppInfo struct {
 	AppID string `json:"appID"`
 	Name  string `json:"name"`
+	Size  int64  `json:"size"`
 }

@@ -8,6 +8,8 @@ export function createAppState() {
   let isLoading = $state<boolean>(true);
   let isSteamFound = $state<boolean>(true);
 
+  const totalSize = $derived(orphans.reduce((sum, app) => sum + (app.size || 0), 0));
+
   // Scan or re-scan the storage for orphan folders
   async function refreshScan() {
     try {
@@ -32,11 +34,22 @@ export function createAppState() {
     }
   }
 
-  // Handle the deletion of a specific shadercache folder
+  // Helper to format bytes for confirmation strings
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   async function handleDelete(appID: string) {
+    const app = orphans.find(a => a.appID === appID);
+    const sizeStr = app ? formatBytes(app.size) : "unknown size";
+
     const confirmed = await RequestConfirmation(
       "Confirm Deletion",
-      `Are you sure you want to delete the shadercache for AppID ${appID}?`
+      `Are you sure you want to delete the shadercache for AppID ${appID} (${sizeStr})?`
     );
     
     if (!confirmed) return;
@@ -53,11 +66,10 @@ export function createAppState() {
     }
   }
 
-  // Handle the deletion of all detected orphan folders
   async function handleDeleteAll() {
     const confirmed = await RequestConfirmation(
       "Confirm Mass Deletion",
-      `Are you sure you want to delete ALL ${orphans.length} orphan shadercaches? This action cannot be undone.`
+      `Are you sure you want to delete ALL ${orphans.length} orphan shadercaches? This will free up ${formatBytes(totalSize)}. This action cannot be undone.`
     );
     
     if (!confirmed) return;
@@ -66,8 +78,8 @@ export function createAppState() {
       isLoading = true;
       errorMessage = '';
 
-      for (const id of orphans) {
-        await DeleteOrphan(id.appID);
+      for (const app of orphans) {
+        await DeleteOrphan(app.appID);
       }
 
       orphans = [];
@@ -85,6 +97,7 @@ export function createAppState() {
   // Expose states and methods as read-only properties or direct functions
   return {
     get orphans() { return orphans; },
+    get totalSize() { return totalSize; },
     get errorMessage() { return errorMessage; },
     get isLoading() { return isLoading; },
     get isSteamFound() { return isSteamFound; },

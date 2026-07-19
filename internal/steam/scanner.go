@@ -50,10 +50,35 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 	var results []AppInfo
 	for _, appID := range orphans {
 		name, _ := GetAppName(appID)
-		results = append(results, AppInfo{AppID: appID, Name: name})
+
+		folderPath := filepath.Join(s.info.ShaderCacheDir, appID)
+		size := s.GetFolderSize(folderPath)
+
+		results = append(results, AppInfo{
+			AppID: appID,
+			Name:  name,
+			Size:  size,
+		})
 	}
 
 	return results, nil
+}
+
+// GetFolderSize calculates the total size of a directory by walking its files
+func (s *Scanner) GetFolderSize(path string) int64 {
+	var size int64
+	filepath.WalkDir(path, func(_ string, d os.DirEntry, err error) error {
+		if err == nil && !d.IsDir() {
+			info, err := d.Info()
+			if err == nil {
+				size += info.Size()
+			}
+		}
+
+		return nil
+	})
+
+	return size
 }
 
 // RemoveShaderCache safely deletes the target shadercache folder for a specific AppID

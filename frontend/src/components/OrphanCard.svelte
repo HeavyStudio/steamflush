@@ -2,15 +2,25 @@
   interface Props {
     name: string;
     id: string;
+    size: number;
     disabled: boolean;
     onDelete: (id: string) => void;
   }
 
-  let { name, id, disabled, onDelete }: Props = $props();
+  let { name, id, size, disabled, onDelete }: Props = $props();
   
   // Track image load failure to trigger fallback icon
   let imageError = $state(false);
   let imageUrl = $derived(`https://cdn.akamai.steamstatic.com/steam/apps/${id}/header.jpg`);
+
+  // Get directory's size
+  function formatBytes(bytes: number) {
+    if (bytes == 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
 </script>
 
 <li>
@@ -25,13 +35,15 @@
     {:else}
       <span class="folder-icon">📁</span>
     {/if}
-    
+
     <div class="details">
-      <span class="game-name">{name || "Unknown Application"}</span>
+      <div class="size-title">
+        <span class="size-label">{formatBytes(size)}</span>
+        <span class="game-name">{name || "Unknown Application"}</span>
+      </div>
       <span class="appid">AppID: {id}</span>
     </div>
   </div>
-  
   <button onclick={() => onDelete(id)} {disabled}>
     Delete
   </button>
@@ -39,14 +51,12 @@
 
 <style>
   li {
-    /* Dark Steam-like background */
     background-color: #1b2838;
     padding: 10px;
     margin-bottom: 4px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* Subtle border instead of transparent */
     border: 1px solid #2d4059;
   }
 
@@ -73,12 +83,12 @@
   }
 
   img, .folder-icon {
-    width: 100px; /* Steam headers are often more compact */
+    width: 100px;
     height: 46px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 2px; /* Steam uses very little border radius */
+    border-radius: 2px;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -90,7 +100,7 @@
 
   .game-name {
     font-weight: 500;
-    color: #e4e4e4; /* Steam white-ish text */
+    color: #e4e4e4;
     font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;
@@ -100,13 +110,32 @@
   }
 
   .appid {
-    font-family: sans-serif; /* Steam doesn't use monospaced fonts for IDs usually */
+    font-family: sans-serif;
     font-size: 0.75rem;
-    color: #6691b0; /* Steam blue-grey for secondary info */
+    color: #6691b0;
+  }
+
+  .size-label {
+    border: 1px solid #6691b0;
+    padding: 0px 6px;
+    border-radius: 2px;
+    font-size: 0.70rem;
+    font-family: sans-serif;
+    color: #c6d4df;
+    margin-right: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .size-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: fit-content;
+    min-width: 0;
   }
 
   button {
-    /* Steam-style button: gradient-like flat background */
     background-color: #3d4450;
     color: #c6d4df;
     border: 1px solid #2d363e;
