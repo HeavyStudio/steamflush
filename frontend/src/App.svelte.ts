@@ -1,14 +1,30 @@
 import { ScanOrphans, DeleteOrphan, RequestConfirmation } from '../wailsjs/go/main/App';
 import { steam } from '../wailsjs/go/models';
 
+export type SortOption = 'name' | 'size' | 'id';
+
 // Manage the global state and actions of the application
 export function createAppState() {
   let orphans = $state<steam.AppInfo[]>([]);
   let errorMessage = $state<string>('');
   let isLoading = $state<boolean>(true);
   let isSteamFound = $state<boolean>(true);
+  let sortOption = $state<SortOption>('name');
 
   const totalSize = $derived(orphans.reduce((sum, app) => sum + (app.size || 0), 0));
+
+  const sortedOrphans = $derived([...orphans].sort((a, b) => {
+    switch(sortOption) {
+      case 'name': return a.name.localeCompare(b.name);
+      case 'size': return b.size - a.size;
+      case 'id': return parseInt(a.appID) - parseInt(b.appID);
+      default: return 0;
+    }
+  }))
+
+  function setSort(option: SortOption) {
+    sortOption = option;
+  }
 
   // Scan or re-scan the storage for orphan folders
   async function refreshScan() {
@@ -96,13 +112,15 @@ export function createAppState() {
 
   // Expose states and methods as read-only properties or direct functions
   return {
-    get orphans() { return orphans; },
+    get orphans() { return sortedOrphans; },
     get totalSize() { return totalSize; },
+    get sortOption() { return sortOption; },
     get errorMessage() { return errorMessage; },
     get isLoading() { return isLoading; },
     get isSteamFound() { return isSteamFound; },
     refreshScan,
     handleDelete,
-    handleDeleteAll
+    handleDeleteAll,
+    setSort
   };
 }
