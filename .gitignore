@@ -1,3 +1,20 @@
-build/bin
-node_modules
-frontend/dist
+# Build directories
+/build/
+/frontend/dist/
+/frontend/build/
+/node_modules/
+
+# Go artifacts
+*.exe
+*.o
+*.so
+*.dylib
+/bin/
+
+# Environment and logs
+.env
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
