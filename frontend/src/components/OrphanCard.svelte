@@ -138,7 +138,8 @@
     background-color: #3d4450;
     color: #c6d4df;
     border: 1px solid #2d363e;
-    padding: 4px 12px;
+    padding: 8px 16px;
+    min-height: 40px;
     cursor: pointer;
     font-size: 0.85rem;
     transition: background 0.2s;

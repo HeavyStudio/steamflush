@@ -13,6 +13,7 @@ main {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 2rem;
+  width: 100%;
 }
 
 .results h2 { 
@@ -50,7 +51,9 @@ ul {
 /* Shared baseline button design */
 button {
   border: none;
-  padding: 6px 14px;
+  padding: 8px 16px;
+  min-height: 40px;
+  font-size: 0.9rem;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
@@ -99,8 +102,6 @@ button:hover:not(:disabled) {
   background-color: #2b3d52;
   color: #c6d4df;
   border: 1px solid #4a5a6a;
-  padding: 4px 8px;
-  font-size: 0.75rem;
   cursor: pointer;
 }
 
@@ -112,4 +113,16 @@ button:hover:not(:disabled) {
   color: #7aa2f7;
   border-color: #7aa2f7;
   font-weight: 700;
+}
+
+.toolbar button:focus-visible,
+.btn-refresh:focus-visible {
+  outline: 2px solid #7aa2f7;
+  outline-offset: 2px;
+  background-color: #4e5968;
+}
+
+button:focus-visible {
+  outline: 2px solid #7aa2f7;
+  outline-offset: 2px;
 }
