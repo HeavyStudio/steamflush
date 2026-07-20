@@ -8,10 +8,12 @@ export type SortOption = 'name' | 'size' | 'id';
 export function createAppState() {
   let orphans = $state<steam.AppInfo[]>([]);
   let errorMessage = $state<string>('');
+  let successMessage = $state<string>('');
   let isLoading = $state<boolean>(true);
   let isSteamFound = $state<boolean>(true);
   let sortOption = $state<SortOption>('name');
   let isScanning = false;
+  let successTimer: ReturnType<typeof setTimeout> | null = null;
 
   const totalSize = $derived(orphans.reduce((sum, app) => sum + (app.size || 0), 0));
 
@@ -28,13 +30,22 @@ export function createAppState() {
     sortOption = option;
   }
 
+  function showSuccess(msg: string) {
+    if (successTimer) clearTimeout(successTimer);
+    successMessage = msg;
+    successTimer = setTimeout(() => {
+      successMessage = '';
+      successTimer = null;
+    }, 3000);
+  }
+
   // Scan or re-scan the storage for orphan folders
   async function refreshScan() {
     if (isScanning) return;
-
     isScanning = true;
     isLoading = true;
     errorMessage = '';
+    successMessage = '';
 
     try {
       const result = await ScanOrphans();
@@ -69,8 +80,10 @@ export function createAppState() {
     try {
       isLoading = true;
       errorMessage = '';
+      successMessage = '';
       await DeleteOrphan(appID);
       orphans = orphans.filter(a => a.appID !== appID);
+      showSuccess("Shadercache deleted successfully!");
     } catch (err) {
       errorMessage = `Deletion failed: ${err instanceof Error ? err.message : String(err)}`;
     } finally {
@@ -89,6 +102,7 @@ export function createAppState() {
     try {
       isLoading = true;
       errorMessage = '';
+      successMessage = '';
 
       const idsToDelete = orphans.map(a => a.appID);
       const result = await RemoveShaderCacheBatch(idsToDelete);
@@ -99,6 +113,7 @@ export function createAppState() {
         errorMessage = `Mass deletion completed with ${failedIDs.length} errors`;
       } else {
         orphans = [];
+        showSuccess("All orphan directories cleared!");
       }
     } catch (err) {
       errorMessage = `Critical failure during mass deletion: ${err instanceof Error ? err.message : String(err)}`;
@@ -114,6 +129,7 @@ export function createAppState() {
     get totalSize() { return totalSize; },
     get sortOption() { return sortOption; },
     get errorMessage() { return errorMessage; },
+    get successMessage() { return successMessage; },
     get isLoading() { return isLoading; },
     get isSteamFound() { return isSteamFound; },
     refreshScan,

@@ -25,6 +25,7 @@
     <StatusMessage 
       isLoading={appState.isLoading} 
       errorMessage={appState.errorMessage}
+      successMessage={appState.successMessage}
       isSteamFound={appState.isSteamFound} 
       isEmpty={appState.orphans.length === 0} 
       onRefresh={appState.refreshScan} 
