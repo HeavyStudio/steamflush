@@ -6,6 +6,14 @@ export function DeleteOrphan(arg1) {
   return window['go']['main']['App']['DeleteOrphan'](arg1);
 }
 
+export function IsSteamFound() {
+  return window['go']['main']['App']['IsSteamFound']();
+}
+
+export function RemoveShaderCacheBatch(arg1) {
+  return window['go']['main']['App']['RemoveShaderCacheBatch'](arg1);
+}
+
 export function RequestConfirmation(arg1, arg2) {
   return window['go']['main']['App']['RequestConfirmation'](arg1, arg2);
 }

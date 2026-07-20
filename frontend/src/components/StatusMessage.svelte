@@ -2,11 +2,12 @@
   interface Props {
     isLoading: boolean;
     errorMessage: string;
+    isSteamFound: boolean; // Ajout de la prop
     isEmpty: boolean;
     onRefresh: () => void;
   }
 
-  let { isLoading, errorMessage, isEmpty, onRefresh }: Props = $props();
+  let { isLoading, errorMessage, isSteamFound, isEmpty, onRefresh }: Props = $props();
 </script>
 
 {#if isLoading}
@@ -15,6 +16,11 @@
   <div class="status-container">
     <p class="status error">Error: {errorMessage}</p>
     <button class="btn-refresh" onclick={onRefresh}>Retry Scan</button>
+  </div>
+{:else if !isSteamFound} <!-- Nouvelle condition prioritaire -->
+  <div class="status-container">
+    <p class="status error">Steam installation not found.</p>
+    <p>Please ensure Steam is installed and configured correctly.</p>
   </div>
 {:else if isEmpty}
   <div class="status-container">

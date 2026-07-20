@@ -6,18 +6,16 @@
   import Header from './components/Header.svelte';
   import StatusMessage from './components/StatusMessage.svelte';
   import OrphanCard from './components/OrphanCard.svelte';
+  import { formatBytes } from './lib/format.ts';
 
   // Import and initialize state logic
   import { createAppState } from './App.svelte.ts';
+  
   const appState = createAppState();
 
-  function formatBytes(bytes: number) {
-    if (bytes == 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
+  $effect(() => {
+    appState.refreshScan();
+  });
 </script>
 
 <Header />
@@ -26,7 +24,8 @@
   <section class="content">
     <StatusMessage 
       isLoading={appState.isLoading} 
-      errorMessage={appState.errorMessage} 
+      errorMessage={appState.errorMessage}
+      isSteamFound={appState.isSteamFound} 
       isEmpty={appState.orphans.length === 0} 
       onRefresh={appState.refreshScan} 
     />
@@ -37,9 +36,21 @@
           <h2>Detected Orphan AppIDs ({appState.orphans.length})</h2>
 
           <div class="toolbar">
-            <button onclick={() => appState.setSort('name')}>Name</button>
-            <button onclick={() => appState.setSort('size')}>Size</button>
-            <button onclick={() => appState.setSort('id')}>ID</button>
+            <button 
+              class:active={appState.sortOption === 'name'}
+              onclick={() => appState.setSort('name')}>
+              Name
+            </button>
+            <button 
+              class:active={appState.sortOption === 'size'}
+              onclick={() => appState.setSort('size')}>
+              Size
+            </button>
+            <button 
+              class:active={appState.sortOption === 'id'}
+              onclick={() => appState.setSort('id')}>
+              ID
+            </button>
           </div>
 
           <div class="actions-wrapper">

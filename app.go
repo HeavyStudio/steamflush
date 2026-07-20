@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"steamflush/internal/steam"
 
@@ -9,8 +10,9 @@ import (
 )
 
 type App struct {
-	ctx     context.Context
-	scanner *steam.Scanner
+	ctx          context.Context
+	scanner      *steam.Scanner
+	isSteamFound bool
 }
 
 func NewApp() *App {
@@ -23,15 +25,25 @@ func (a *App) startup(ctx context.Context) {
 	// Initialize and resolve Steam directories on startup
 	info, err := steam.ResolvePaths()
 	if err != nil {
-		runtime.LogErrorf(a.ctx, "Failed to resolve Steam paths: %v", err)
+		if errors.Is(err, steam.ErrSteamNotFound) {
+			a.isSteamFound = false
+			runtime.LogWarning(a.ctx, "Steam installation not found")
+		} else {
+			runtime.LogErrorf(a.ctx, "Fatal error resolving Steam paths: %v", err)
+		}
 		return
 	}
 
+	a.isSteamFound = true
 	a.scanner = steam.NewScanner(info)
 }
 
 // ScanOrphans acts as a gateway to trigger the isoldated steam service scanner
 func (a *App) ScanOrphans() ([]steam.AppInfo, error) {
+	if !a.isSteamFound {
+		return nil, fmt.Errorf("steam installation not detected")
+	}
+
 	if a.scanner == nil {
 		return nil, fmt.Errorf("steam scanner service is not initialized")
 	}
@@ -60,4 +72,15 @@ func (a *App) RequestConfirmation(title string, message string) (bool, error) {
 	}
 
 	return result == "Yes", nil
+}
+
+func (a *App) IsSteamFound() bool {
+	return a.isSteamFound
+}
+
+func (a *App) RemoveShaderCacheBatch(appIDs []string) []string {
+	if a.scanner == nil {
+		return appIDs
+	}
+	return a.scanner.RemoveShaderCacheBatch(appIDs)
 }

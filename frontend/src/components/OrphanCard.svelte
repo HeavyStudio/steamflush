@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { formatBytes } from "../lib/format";
+
   interface Props {
     name: string;
     id: string;
@@ -12,15 +14,6 @@
   // Track image load failure to trigger fallback icon
   let imageError = $state(false);
   let imageUrl = $derived(`https://cdn.akamai.steamstatic.com/steam/apps/${id}/header.jpg`);
-
-  // Get directory's size
-  function formatBytes(bytes: number) {
-    if (bytes == 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  }
 </script>
 
 <li>
@@ -30,6 +23,8 @@
       <img 
         src={imageUrl} 
         alt={name} 
+        loading="lazy"
+        decoding="async"
         onerror={() => imageError = true} 
       />
     {:else}
@@ -39,7 +34,7 @@
     <div class="details">
       <div class="size-title">
         <span class="size-label">{formatBytes(size)}</span>
-        <span class="game-name">{name || "Unknown Application"}</span>
+        <span class="game-name">{name || "Unknown Game"}</span>
       </div>
       <span class="appid">AppID: {id}</span>
     </div>
@@ -91,6 +86,10 @@
     border-radius: 2px;
     object-fit: contain;
     flex-shrink: 0;
+  }
+
+  img {
+    background-color: #0f1922;
   }
 
   .folder-icon { 

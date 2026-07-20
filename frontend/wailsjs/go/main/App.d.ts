@@ -4,6 +4,10 @@ import {steam} from '../models';
 
 export function DeleteOrphan(arg1:string):Promise<void>;
 
+export function IsSteamFound():Promise<boolean>;
+
+export function RemoveShaderCacheBatch(arg1:Array<string>):Promise<Array<string>>;
+
 export function RequestConfirmation(arg1:string,arg2:string):Promise<boolean>;
 
 export function ScanOrphans():Promise<Array<steam.AppInfo>>;

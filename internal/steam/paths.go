@@ -1,6 +1,7 @@
 package steam
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -12,6 +13,8 @@ type Info struct {
 	ShaderCacheDir string
 	CompatDataDir  string
 }
+
+var ErrSteamNotFound = errors.New("steam installation not found")
 
 // ResolvePaths automatically detects the actual Steam installation directories on Linux
 func ResolvePaths() (*Info, error) {
@@ -38,7 +41,7 @@ func ResolvePaths() (*Info, error) {
 
 	// If no directory matches, fallback to the standard location layout
 	if steamBase == "" {
-		steamBase = filepath.Join(home, ".steam", "debian-installation")
+		return nil, ErrSteamNotFound
 	}
 
 	appsDir := filepath.Join(steamBase, "steamapps")

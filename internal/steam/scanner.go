@@ -19,9 +19,16 @@ func NewScanner(info *Info) *Scanner {
 
 // FindOrphans browses the shadercache folder to spot abandoned directories
 func (s *Scanner) FindOrphans() ([]AppInfo, error) {
-	// Explicit check to feed the front-end empty state workflow
-	if _, err := os.Stat(s.info.ShaderCacheDir); os.IsNotExist(err) {
-		return nil, fmt.Errorf("shadercache directory not found")
+	info, err := os.Stat(s.info.ShaderCacheDir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("shadercache directory not found: %w", err)
+		}
+		return nil, fmt.Errorf("failed to access shadercache directory: %w", err)
+	}
+
+	if !info.IsDir() {
+		return nil, fmt.Errorf("shadercache path is not a directory")
 	}
 
 	files, err := os.ReadDir(s.info.ShaderCacheDir)
@@ -34,22 +41,33 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 		if file.IsDir() {
 			appID := file.Name()
 
-			// Skip any folders that are not strictly numeric (Steam AppIDs are pure digits)
 			if strings.Trim(appID, "0123456789") != "" {
 				continue
 			}
 
-			// If the appmanifest_[appID].acf file does not exist, the game is uninstalled
 			manifestPath := filepath.Join(s.info.AppsDir, "appmanifest_"+appID+".acf")
-			if _, err := os.Stat(manifestPath); os.IsNotExist(err) {
-				orphans = append(orphans, appID)
+			_, err := os.Stat(manifestPath)
+			if err != nil {
+				if os.IsNotExist(err) {
+					orphans = append(orphans, appID)
+				} else {
+					fmt.Printf("Warning: failed to check manifest for app %s: %v\n", appID, err)
+				}
 			}
 		}
 	}
 
+	names, err := GetAppNamesBatch(orphans)
+	if err != nil {
+		fmt.Printf("Warning: failed to fetch game names: %v\n", err)
+	}
+
 	var results []AppInfo
 	for _, appID := range orphans {
-		name, _ := GetAppName(appID)
+		name := names[appID]
+		if name == "" {
+			name = "Unknown Game"
+		}
 
 		folderPath := filepath.Join(s.info.ShaderCacheDir, appID)
 		size := s.GetFolderSize(folderPath)
@@ -67,8 +85,12 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 // GetFolderSize calculates the total size of a directory by walking its files
 func (s *Scanner) GetFolderSize(path string) int64 {
 	var size int64
-	filepath.WalkDir(path, func(_ string, d os.DirEntry, err error) error {
-		if err == nil && !d.IsDir() {
+	err := filepath.WalkDir(path, func(currentPath string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !d.IsDir() {
 			info, err := d.Info()
 			if err == nil {
 				size += info.Size()
@@ -78,27 +100,39 @@ func (s *Scanner) GetFolderSize(path string) int64 {
 		return nil
 	})
 
+	if err != nil {
+		fmt.Printf("Warning: failed to fully calculate size for %s: %v\n", path, err)
+	}
+
 	return size
 }
 
 // RemoveShaderCache safely deletes the target shadercache folder for a specific AppID
 func (s *Scanner) RemoveShaderCache(appID string) error {
-	if appID == "" {
-		return fmt.Errorf("appID cannot be empty")
+	if appID == "" || strings.Trim(appID, "0123456789") != "" {
+		return fmt.Errorf("invalid appID")
 	}
 
 	targetPath := filepath.Join(s.info.ShaderCacheDir, appID)
+	cleaned := filepath.Clean(targetPath)
 
-	// Security checkpoint: prevent path traversal attacks by ensuring we stay in shadercache
-	if !strings.HasPrefix(targetPath, s.info.ShaderCacheDir) {
+	if !strings.HasPrefix(cleaned, s.info.ShaderCacheDir+string(filepath.Separator)) {
 		return fmt.Errorf("security violation: path traversal detected")
 	}
 
-	if _, err := os.Stat(targetPath); err == nil {
-		if err := os.RemoveAll(targetPath); err != nil {
-			return fmt.Errorf("failed to delete shadercache for %s: %w", appID, err)
+	if err := os.RemoveAll(cleaned); err != nil {
+		return fmt.Errorf("failed to delete shadercache for %s: %w", appID, err)
+	}
+	return nil
+}
+
+// RemoveShaderCacheBatch iterates through a list of AppIDs and attempts to remove their shadercache folders
+func (s *Scanner) RemoveShaderCacheBatch(appIDs []string) []string {
+	var failedIDs []string
+	for _, id := range appIDs {
+		if err := s.RemoveShaderCache(id); err != nil {
+			failedIDs = append(failedIDs, id)
 		}
 	}
-
-	return nil
+	return failedIDs
 }
