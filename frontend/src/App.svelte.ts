@@ -1,5 +1,6 @@
-import { ScanOrphans, DeleteOrphan, RequestConfirmation } from '../wailsjs/go/main/App';
+import { ScanOrphans, DeleteOrphan, RequestConfirmation, RemoveShaderCacheBatch } from '../wailsjs/go/main/App';
 import { steam } from '../wailsjs/go/models';
+import { formatBytes } from './lib/format';
 
 export type SortOption = 'name' | 'size' | 'id';
 
@@ -10,6 +11,7 @@ export function createAppState() {
   let isLoading = $state<boolean>(true);
   let isSteamFound = $state<boolean>(true);
   let sortOption = $state<SortOption>('name');
+  let isScanning = false;
 
   const totalSize = $derived(orphans.reduce((sum, app) => sum + (app.size || 0), 0));
 
@@ -17,7 +19,7 @@ export function createAppState() {
     switch(sortOption) {
       case 'name': return a.name.localeCompare(b.name);
       case 'size': return b.size - a.size;
-      case 'id': return parseInt(a.appID) - parseInt(b.appID);
+      case 'id': return a.appID.localeCompare(b.appID);
       default: return 0;
     }
   }))
@@ -28,13 +30,15 @@ export function createAppState() {
 
   // Scan or re-scan the storage for orphan folders
   async function refreshScan() {
+    if (isScanning) return;
+
+    isScanning = true;
+    isLoading = true;
+    errorMessage = '';
+
     try {
-      isLoading = true;
-      errorMessage = '';
-      
       const result = await ScanOrphans();
-      // Secure assignment: fallback to an empty array if Wails/Go returns null
-      orphans = result || []
+      orphans = result || [];
       isSteamFound = true;
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -47,17 +51,9 @@ export function createAppState() {
       orphans = [];
     } finally {
       isLoading = false;
+      isScanning = false;
     }
   }
-
-  // Helper to format bytes for confirmation strings
-  const formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
 
   async function handleDelete(appID: string) {
     const app = orphans.find(a => a.appID === appID);
@@ -94,21 +90,23 @@ export function createAppState() {
       isLoading = true;
       errorMessage = '';
 
-      for (const app of orphans) {
-        await DeleteOrphan(app.appID);
-      }
+      const idsToDelete = orphans.map(a => a.appID);
+      const result = await RemoveShaderCacheBatch(idsToDelete);
+      const failedIDs = result ?? [];
 
-      orphans = [];
+      if (failedIDs.length > 0) {
+        orphans = orphans.filter(a => failedIDs.includes(a.appID));
+        errorMessage = `Mass deletion completed with ${failedIDs.length} errors`;
+      } else {
+        orphans = [];
+      }
     } catch (err) {
-      errorMessage = `Mass deletion failed: ${err instanceof Error ? err.message : String(err)}`;
+      errorMessage = `Critical failure during mass deletion: ${err instanceof Error ? err.message : String(err)}`;
       await refreshScan();
     } finally {
       isLoading = false;
     }
   }
-
-  // Execute an initial scan on state creation
-  refreshScan();
 
   // Expose states and methods as read-only properties or direct functions
   return {

@@ -107,3 +107,9 @@ button:hover:not(:disabled) {
 .toolbar button:hover {
   background-color: #3b5066;
 }
+
+.toolbar button.active {
+  color: #7aa2f7;
+  border-color: #7aa2f7;
+  font-weight: 700;
+}
