@@ -64,9 +64,9 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 
 	var results []AppInfo
 	for _, appID := range orphans {
-		name := names[appID]
-		if name == "" {
-			name = "Unknown Game"
+		name, ok := names[appID]
+		if !ok || name == "" {
+			continue
 		}
 
 		folderPath := filepath.Join(s.info.ShaderCacheDir, appID)
