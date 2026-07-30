@@ -15,6 +15,9 @@ var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
 }
 
+// ErrNotSteamApp is returned if the ID is not a Steam game.
+var ErrNotSteamApp = fmt.Errorf("not a valid steam app")
+
 // GetAppNamesBatch retrieves names for a slice of app IDs in parallel.
 func GetAppNamesBatch(appIDs []string) (map[string]string, error) {
 	cache := loadCache()
@@ -26,13 +29,21 @@ func GetAppNamesBatch(appIDs []string) (map[string]string, error) {
 	for _, id := range appIDs {
 		id := id
 		if name, ok := cache[id]; ok {
-			results[id] = name
+			if name != "" && name != "Unknown Game" {
+				results[id] = name
+			}
 			continue
 		}
 
 		g.Go(func() error {
 			name, err := GetAppName(id)
 			if err != nil {
+				if err == ErrNotSteamApp {
+					mu.Lock()
+					cache[id] = ""
+					mu.Unlock()
+					return nil
+				}
 				return err
 			}
 
@@ -57,7 +68,7 @@ func GetAppName(appID string) (string, error) {
 
 	resp, err := httpClient.Get(targetURL)
 	if err != nil {
-		return "Unknown Game", err
+		return "", err
 	}
 	defer resp.Body.Close()
 
@@ -78,12 +89,12 @@ func GetAppName(appID string) (string, error) {
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "Unknown Game", err
+		return "", err
 	}
 
 	if app, ok := result[appID]; ok && app.Success {
 		return app.Data.Name, nil
 	}
 
-	return "Unknown Game", nil
+	return "", ErrNotSteamApp
 }

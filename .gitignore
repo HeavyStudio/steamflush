@@ -18,3 +18,8 @@
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Flatpak build artifacts & bundles
+.flatpak-builder/
+repo/
+*.flatpak
