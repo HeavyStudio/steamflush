@@ -6,11 +6,14 @@
   import Header from "./components/Header.svelte";
   import StatusMessage from "./components/StatusMessage.svelte";
   import OrphanCard from "./components/OrphanCard.svelte";
+  import Footer from "./components/Footer.svelte";
   import { formatBytes } from "./lib/format.ts";
+
+  // Import spatial navigation action
+  import { spatialNavigation } from "./lib/spatialNavigation.ts";
 
   // Import and initialize state logic
   import { createAppState } from "./App.svelte.ts";
-  import Footer from "./components/Footer.svelte";
 
   const appState = createAppState();
 
@@ -22,7 +25,7 @@
 <div class="app-container">
   <Header />
 
-  <main>
+  <main use:spatialNavigation={{ enabled: !appState.isLoading }}>
     <section class="content">
       <StatusMessage
         isLoading={appState.isLoading}

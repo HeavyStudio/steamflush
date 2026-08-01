@@ -156,6 +156,8 @@
   button:hover:not(:disabled) {
     background-color: #4e5968;
     color: #ffffff;
+    border-color: #7aa2f7;
+    outline: 2px solid #7aa2f7;
   }
 
   button:disabled {
