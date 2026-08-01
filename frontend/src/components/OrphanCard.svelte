@@ -47,12 +47,13 @@
 <style>
   li {
     background-color: #1b2838;
-    padding: 10px;
-    margin-bottom: 4px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border: 1px solid #2d4059;
+    border-radius: 6px;
   }
 
   li:hover {
@@ -63,7 +64,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    height: 45px;
+    min-height: 46px;
     flex-shrink: 0;
   }
 
@@ -138,10 +139,16 @@
     background-color: #3d4450;
     color: #c6d4df;
     border: 1px solid #2d363e;
-    padding: 8px 16px;
-    min-height: 40px;
+    border-radius: 4px;
+    padding: 0 16px;
+    min-height: 44px;
+    min-width: 150px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-weight: 600;
     transition: background 0.2s;
     flex-shrink: 0;
   }
