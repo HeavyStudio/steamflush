@@ -7,6 +7,7 @@
   import StatusMessage from "./components/StatusMessage.svelte";
   import OrphanCard from "./components/OrphanCard.svelte";
   import Footer from "./components/Footer.svelte";
+  import HistoryModal from "./components/HistoryModal.svelte";
   import { formatBytes } from "./lib/format.ts";
 
   // Import spatial navigation action
@@ -16,16 +17,22 @@
   import { createAppState } from "./App.svelte.ts";
 
   const appState = createAppState();
+  let showHistoryModal = $state(false);
 
   $effect(() => {
     appState.refreshScan();
+    appState.refreshHistory();
   });
+
+  function toggleHistory() {
+    showHistoryModal = !showHistoryModal;
+  }
 </script>
 
 <div class="app-container">
   <Header />
 
-  <main use:spatialNavigation={{ enabled: !appState.isLoading }}>
+  <main use:spatialNavigation={{ enabled: !appState.isLoading && !showHistoryModal }}>
     <section class="content">
       <StatusMessage
         isLoading={appState.isLoading}
@@ -99,6 +106,16 @@
         </div>
       {/if}
     </section>
+
+    <div class="history-trigger">
+      <button type="button" class="history-btn" onclick={toggleHistory}>
+        Show History
+      </button>
+    </div>
+
+    {#if showHistoryModal}
+      <HistoryModal history={appState.history} onClose={() => (showHistoryModal = false)} />
+    {/if}
   </main>
 
   <Footer />

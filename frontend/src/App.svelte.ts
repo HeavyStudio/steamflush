@@ -1,4 +1,10 @@
-import { ScanOrphans, DeleteOrphan, RequestConfirmation, RemoveShaderCacheBatch } from '../wailsjs/go/main/App';
+import { 
+  ScanOrphans, 
+  DeleteOrphan, 
+  RequestConfirmation, 
+  RemoveShaderCacheBatch,
+  GetCleanHistory 
+} from '../wailsjs/go/main/App';
 import { steam } from '../wailsjs/go/models';
 import { formatBytes } from './lib/format';
 
@@ -7,6 +13,7 @@ export type SortOption = 'name' | 'size' | 'id';
 // Manage the global state and actions of the application
 export function createAppState() {
   let orphans = $state<steam.AppInfo[]>([]);
+  let history = $state<steam.CleanRecord[]>([]);
   let errorMessage = $state<string>('');
   let successMessage = $state<string>('');
   let isLoading = $state<boolean>(true);
@@ -37,6 +44,17 @@ export function createAppState() {
       successMessage = '';
       successTimer = null;
     }, 3000);
+  }
+
+  // Refresh history
+  async function refreshHistory() {
+    try {
+      const result = await GetCleanHistory();
+      console.log("History from Go:", result);
+      history = result || [];
+    } catch (err) {
+      console.error("Failed to fetch clean history:", err);
+    }
   }
 
   // Scan or re-scan the storage for orphan folders
@@ -83,6 +101,7 @@ export function createAppState() {
       successMessage = '';
       await DeleteOrphan(appID);
       orphans = orphans.filter(a => a.appID !== appID);
+      await refreshHistory();
       showSuccess("Shadercache deleted successfully!");
     } catch (err) {
       errorMessage = `Deletion failed: ${err instanceof Error ? err.message : String(err)}`;
@@ -115,6 +134,8 @@ export function createAppState() {
         orphans = [];
         showSuccess("All orphan directories cleared!");
       }
+
+      await refreshHistory();
     } catch (err) {
       errorMessage = `Critical failure during mass deletion: ${err instanceof Error ? err.message : String(err)}`;
       await refreshScan();
@@ -126,6 +147,7 @@ export function createAppState() {
   // Expose states and methods as read-only properties or direct functions
   return {
     get orphans() { return sortedOrphans; },
+    get history() { return history; },
     get totalSize() { return totalSize; },
     get sortOption() { return sortOption; },
     get errorMessage() { return errorMessage; },
@@ -133,6 +155,7 @@ export function createAppState() {
     get isLoading() { return isLoading; },
     get isSteamFound() { return isSteamFound; },
     refreshScan,
+    refreshHistory,
     handleDelete,
     handleDeleteAll,
     setSort
