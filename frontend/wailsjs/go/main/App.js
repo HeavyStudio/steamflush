@@ -6,6 +6,10 @@ export function DeleteOrphan(arg1) {
   return window['go']['main']['App']['DeleteOrphan'](arg1);
 }
 
+export function GetCleanHistory() {
+  return window['go']['main']['App']['GetCleanHistory']();
+}
+
 export function IsSteamFound() {
   return window['go']['main']['App']['IsSteamFound']();
 }

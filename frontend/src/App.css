@@ -26,10 +26,10 @@ main {
   flex: 1;
 }
 
-.results h2 { 
+.results h2 {
   font-family: 'Rajdhani', sans-serif;
-  color: #7aa2f7; 
-  margin: 0; 
+  color: #7aa2f7;
+  margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -107,7 +107,7 @@ button:disabled {
 
 button:hover:not(:disabled) {
   border: 2px solid #7aa2f7;
-  padding: 4px 12px;  
+  padding: 4px 12px;
 }
 
 .toolbar {
@@ -138,4 +138,40 @@ button:hover:not(:disabled) {
   outline: 2px solid #7aa2f7;
   outline-offset: 2px;
   background-color: #4e5968;
+}
+
+.history-trigger {
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  z-index: 40;
+}
+
+.history-btn {
+  background-color: #24283b;
+  color: #c0caf5;
+  border: 1px solid #414868;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.history-btn:hover:not(:disabled) {
+  background-color: #292e42;
+  border: 1px solid #7aa2f7;
+  color: #7dcfff;
+  padding: 8px 16px; /* Annule la réduction de padding globale du button:hover */
+  transform: translateY(-1px);
+}
+
+.history-btn:active:not(:disabled) {
+  transform: translateY(0);
 }

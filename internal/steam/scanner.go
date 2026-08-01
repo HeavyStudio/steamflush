@@ -70,7 +70,7 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 		}
 
 		folderPath := filepath.Join(s.info.ShaderCacheDir, appID)
-		size := s.GetFolderSize(folderPath)
+		size := s.GetDirectorySize(folderPath)
 
 		results = append(results, AppInfo{
 			AppID: appID,
@@ -82,8 +82,8 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 	return results, nil
 }
 
-// GetFolderSize calculates the total size of a directory by walking its files
-func (s *Scanner) GetFolderSize(path string) int64 {
+// GetDirectorySize calculates the total size of a directory by walking its files
+func (s *Scanner) GetDirectorySize(path string) int64 {
 	var size int64
 	err := filepath.WalkDir(path, func(currentPath string, d os.DirEntry, err error) error {
 		if err != nil {
@@ -128,11 +128,44 @@ func (s *Scanner) RemoveShaderCache(appID string) error {
 
 // RemoveShaderCacheBatch iterates through a list of AppIDs and attempts to remove their shadercache folders
 func (s *Scanner) RemoveShaderCacheBatch(appIDs []string) []string {
+	names, err := GetAppNamesBatch(appIDs)
+	if err != nil {
+		fmt.Printf("Warning: failed to fetch game names for history: %v\n", err)
+		names = make(map[string]string)
+	}
+
 	var failedIDs []string
+	var cleanedItems []string
+	var historyItems []CleanedItem
+	var totalBytesFreed int64
+
 	for _, id := range appIDs {
+		dirPath := filepath.Join(s.info.ShaderCacheDir, id)
+		size := s.GetDirectorySize(dirPath)
+
+		name := names[id]
+		if name == "" {
+			name = "Unknown Game (" + id + ")"
+		}
+
 		if err := s.RemoveShaderCache(id); err != nil {
 			failedIDs = append(failedIDs, id)
+		} else {
+			cleanedItems = append(cleanedItems, id)
+			totalBytesFreed += size
+			historyItems = append(historyItems, CleanedItem{
+				AppID: id,
+				Name:  name,
+				Size:  size,
+			})
 		}
 	}
+
+	if len(historyItems) > 0 {
+		if err := AddCleanRecord(len(historyItems), totalBytesFreed, historyItems); err != nil {
+			fmt.Printf("Warning: failed to save cleaning history: %v\n", err)
+		}
+	}
+
 	return failedIDs
 }
