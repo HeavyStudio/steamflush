@@ -8,6 +8,7 @@
   import OrphanCard from "./components/OrphanCard.svelte";
   import Footer from "./components/Footer.svelte";
   import HistoryModal from "./components/HistoryModal.svelte";
+  import NotificationModal from "./components/NotificationModal.svelte";
   import { formatBytes } from "./lib/format.ts";
 
   // Import spatial navigation action
@@ -27,17 +28,25 @@
   function toggleHistory() {
     showHistoryModal = !showHistoryModal;
   }
+
+  function closeNotification() {
+    appState.clearSuccessMessage?.();
+  }
 </script>
 
 <div class="app-container">
   <Header />
 
-  <main use:spatialNavigation={{ enabled: !appState.isLoading && !showHistoryModal }}>
+  <main
+    use:spatialNavigation={{
+      enabled:
+        !appState.isLoading && !showHistoryModal && !appState.successMessage,
+    }}
+  >
     <section class="content">
       <StatusMessage
         isLoading={appState.isLoading}
         errorMessage={appState.errorMessage}
-        successMessage={appState.successMessage}
         isSteamFound={appState.isSteamFound}
         isEmpty={appState.orphans.length === 0}
         onRefresh={appState.refreshScan}
@@ -114,7 +123,18 @@
     </div>
 
     {#if showHistoryModal}
-      <HistoryModal history={appState.history} onClose={() => (showHistoryModal = false)} />
+      <HistoryModal
+        history={appState.history}
+        onClose={() => (showHistoryModal = false)}
+      />
+    {/if}
+
+    {#if appState.successMessage}
+      <NotificationModal
+        message={appState.successMessage}
+        onClose={closeNotification}
+        autoCloseDelay={15}
+      />
     {/if}
   </main>
 
