@@ -111,52 +111,15 @@ func (a *App) IsSteamFound() bool {
 	return a.isSteamFound
 }
 
-// RemoveShaderCacheBatch handles mass deletion and records a batch history entry
+// RemoveShaderCacheBatch handles mass deletion and delegates batch history recording to the scanner
 func (a *App) RemoveShaderCacheBatch(appIDs []string) []string {
 	if a.scanner == nil {
 		return appIDs
 	}
 
-	// 1. Récupérer la liste des orphelins avant la suppression
-	orphansMap := make(map[string]steam.AppInfo)
-	if orphans, err := a.scanner.FindOrphans(); err == nil {
-		for _, orphan := range orphans {
-			orphansMap[orphan.AppID] = orphan
-		}
-	}
-
-	// 2. Lancer la suppression par lot
-	failedIDs := a.scanner.RemoveShaderCacheBatch(appIDs)
-	failedMap := make(map[string]bool)
-	for _, id := range failedIDs {
-		failedMap[id] = true
-	}
-
-	// 3. Identifier ceux qui ont été supprimés avec succès pour l'historique
-	var deletedItems []steam.CleanedItem
-	var totalBytesFreed int64
-
-	for _, id := range appIDs {
-		if !failedMap[id] {
-			if app, exists := orphansMap[id]; exists {
-				deletedItems = append(deletedItems, steam.CleanedItem{
-					AppID: app.AppID,
-					Name:  app.Name,
-					Size:  app.Size,
-				})
-				totalBytesFreed += app.Size
-			}
-		}
-	}
-
-	// 4. Enregistrer la session globale de nettoyage
-	if len(deletedItems) > 0 {
-		if saveErr := steam.AddCleanRecord(len(deletedItems), totalBytesFreed, deletedItems); saveErr != nil {
-			runtime.LogErrorf(a.ctx, "Failed to save batch history record: %v", saveErr)
-		}
-	}
-
-	return failedIDs
+	// Le scanner s'occupe déjà de supprimer les dossiers ET de sauvegarder
+	// la session dans l'historique via AddCleanRecord
+	return a.scanner.RemoveShaderCacheBatch(appIDs)
 }
 
 func (a *App) GetCleanHistory() ([]steam.CleanRecord, error) {
