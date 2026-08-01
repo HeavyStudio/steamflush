@@ -2,13 +2,12 @@
   interface Props {
     isLoading: boolean;
     errorMessage: string;
-    successMessage?: string;
     isSteamFound: boolean;
     isEmpty: boolean;
     onRefresh: () => void;
   }
 
-  let { isLoading, errorMessage, successMessage, isSteamFound, isEmpty, onRefresh }: Props = $props();
+  let { isLoading, errorMessage, isSteamFound, isEmpty, onRefresh }: Props = $props();
 </script>
 
 {#if isLoading}
@@ -17,13 +16,6 @@
   <div class="status-container" role="alert" aria-live="assertive">
     <p class="status error">Error: {errorMessage}</p>
     <button class="btn-refresh" onclick={onRefresh}>Retry Scan</button>
-  </div>
-{:else if successMessage}
-  <div class="status-container" role="status" aria-live="polite">
-    <p class="status success">{successMessage}</p>
-    {#if isEmpty}
-      <button class="btn-refresh" onclick={onRefresh}>Scan Again</button>
-    {/if}
   </div>
 {:else if !isSteamFound}
   <div class="status-container" role="alert" aria-live="assertive">

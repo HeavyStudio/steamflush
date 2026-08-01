@@ -35,6 +35,10 @@
         }
     }
 
+    function handleMouseEnter(e: MouseEvent) {
+        (e.currentTarget as HTMLElement)?.focus();
+    }
+
     // Effet declenché dès que la modale ou history est prêt dans le DOM
     $effect(() => {
         if (modalContainer) {
@@ -94,11 +98,13 @@
                 <div class="state-text">No cleaning sessions recorded yet.</div>
             {:else}
                 {#each history as record, index}
-                    <button
-                        type="button"
+                    <div
                         class="history-card"
+                        role="button"
                         tabindex="0"
+                        onmouseenter={handleMouseEnter}
                         onclick={() => toggleExpand(index)}
+                        onkeydown={(e) => (e.key == 'Enter' || e.key == ' ') && toggleExpand(index)}
                     >
                         <div class="card-summary">
                             <div>
@@ -141,7 +147,7 @@
                                 {/each}
                             </div>
                         {/if}
-                    </button>
+                    </div>
                 {/each}
             {/if}
         </div>
@@ -259,33 +265,54 @@
     }
 
     .history-card {
+        /* 1. Dimensions et boîte strictes */
+        box-sizing: border-box !important;
         width: 100%;
-        background-color: #24283b;
-        border: 1px solid #414868;
-        border-radius: 6px;
+        margin: 0;
         padding: 0.875rem 1rem;
-        text-align: left;
-        cursor: pointer;
-        transition:
-            border-color 0.2s,
-            background-color 0.2s;
+        display: flex;
+        flex-direction: column;
+
+        /* 2. Style visuel */
+        background-color: #24283b;
+        border: 2px solid #414868;
+        border-radius: 6px;
+
+        /* 3. Bloque tout recalcul de ligne / texte natif aux boutons */
+        outline: none !important;
+        line-height: 1.2;
+        -webkit-font-smoothing: antialiased;
+
         color: inherit;
         font-family: inherit;
+        text-align: left;
+        cursor: pointer;
+
+        /* On ne tienne que les couleurs pour éviter tout saut de layout */
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
     }
 
     .history-card:hover,
     .history-card:focus,
     .history-card:focus-visible {
-        border-color: #7aa2f7;
         background-color: #292e42;
-        outline: 2px solid #7aa2f7;
-        outline-offset: -2px;
+        border-color: #7aa2f7;
+        outline: none !important;
+        box-shadow:
+            0 0 0 2px #7aa2f7,
+            0 0 12px rgba(122, 162, 247, 0.4);
     }
 
     .card-summary {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
+        /* Verrouille l'alignement vertical des deux blocs d'information */
+        min-height: 2.4rem;
     }
 
     .date {

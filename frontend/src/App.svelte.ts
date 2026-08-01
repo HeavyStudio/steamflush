@@ -31,19 +31,21 @@ export function createAppState() {
       case 'id': return a.appID.localeCompare(b.appID);
       default: return 0;
     }
-  }))
+  }));
 
   function setSort(option: SortOption) {
     sortOption = option;
   }
 
-  function showSuccess(msg: string) {
+  function clearSuccessMessage() {
     if (successTimer) clearTimeout(successTimer);
+    successMessage = '';
+    successTimer = null;
+  }
+
+  function showSuccess(msg: string) {
+    clearSuccessMessage();
     successMessage = msg;
-    successTimer = setTimeout(() => {
-      successMessage = '';
-      successTimer = null;
-    }, 3000);
   }
 
   // Refresh history
@@ -63,7 +65,7 @@ export function createAppState() {
     isScanning = true;
     isLoading = true;
     errorMessage = '';
-    successMessage = '';
+    clearSuccessMessage();
 
     try {
       const result = await ScanOrphans();
@@ -98,7 +100,7 @@ export function createAppState() {
     try {
       isLoading = true;
       errorMessage = '';
-      successMessage = '';
+      clearSuccessMessage();
       await DeleteOrphan(appID);
       orphans = orphans.filter(a => a.appID !== appID);
       await refreshHistory();
@@ -121,7 +123,7 @@ export function createAppState() {
     try {
       isLoading = true;
       errorMessage = '';
-      successMessage = '';
+      clearSuccessMessage();
 
       const idsToDelete = orphans.map(a => a.appID);
       const result = await RemoveShaderCacheBatch(idsToDelete);
@@ -158,6 +160,7 @@ export function createAppState() {
     refreshHistory,
     handleDelete,
     handleDeleteAll,
-    setSort
+    setSort,
+    clearSuccessMessage
   };
 }
