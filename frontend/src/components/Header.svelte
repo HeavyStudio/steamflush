@@ -15,12 +15,12 @@
 
 <style>
   header {
-    background-color: #1a1b26;
+    background-color: var(--color-bg);
     padding: 1.5rem 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid #414868;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .logo-group {
@@ -49,7 +49,7 @@
   }
 
   .subtitle {
-    color: #a9b1d6;
+    color: var(--color-text-secondary);
     margin: -0.25rem 0 0 0;
     font-size: 0.85rem;
     font-weight: 500;

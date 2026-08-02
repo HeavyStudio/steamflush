@@ -46,18 +46,18 @@
 
 <style>
   li {
-    background-color: #1b2838;
+    background-color: var(--color-surface-alt);
     padding: 10px 12px;
     margin-bottom: 6px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #2d4059;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
   }
 
   li:hover {
-    background-color: #26384f;
+    background-color: var(--color-surface-hover);
   }
 
   .card-info {
@@ -90,17 +90,17 @@
   }
 
   img {
-    background-color: #0f1922;
+    background-color: var(--color-bg-inset);
   }
 
-  .folder-icon { 
+  .folder-icon {
     font-size: 1.2rem;
-    background-color: #0f1922;
+    background-color: var(--color-bg-inset);
   }
 
   .game-name {
     font-weight: 500;
-    color: #e4e4e4;
+    color: var(--color-text);
     font-size: 0.95rem;
     white-space: nowrap;
     overflow: hidden;
@@ -112,16 +112,16 @@
   .appid {
     font-family: sans-serif;
     font-size: 0.75rem;
-    color: #6691b0;
+    color: var(--color-text-muted);
   }
 
   .size-label {
-    border: 1px solid #6691b0;
+    border: 1px solid var(--color-border-strong);
     padding: 0px 6px;
     border-radius: 2px;
     font-size: 0.70rem;
     font-family: sans-serif;
-    color: #c6d4df;
+    color: var(--color-text);
     margin-right: 8px;
     white-space: nowrap;
     flex-shrink: 0;
@@ -136,9 +136,9 @@
   }
 
   button {
-    background-color: #3d4450;
-    color: #c6d4df;
-    border: 1px solid #2d363e;
+    background-color: var(--color-border);
+    color: var(--color-text);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 4px;
     padding: 0 16px;
     min-height: 44px;
@@ -154,15 +154,15 @@
   }
 
   button:hover:not(:disabled) {
-    background-color: #4e5968;
+    background-color: var(--color-border-strong);
     color: #ffffff;
-    border-color: #7aa2f7;
-    outline: 2px solid #7aa2f7;
+    border-color: var(--color-accent);
+    outline: 2px solid var(--color-accent);
   }
 
   button:disabled {
-    background-color: #2a3138;
-    color: #4a5a6a;
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-faint);
     cursor: not-allowed;
   }
 </style>

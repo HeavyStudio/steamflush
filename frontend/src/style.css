@@ -1,26 +1,57 @@
-html {
-    background-color: rgba(27, 38, 54, 1);
-    text-align: center;
-    color: white;
+/* ==========================================================================
+   Design tokens — single source of truth for the SteamFlush palette.
+   Custom properties pierce Svelte's style scoping, so these are usable from
+   every component <style> block via the var() function.
+   ========================================================================== */
+:root {
+    /* Surfaces (deepest -> most elevated) */
+    --color-bg: #1a1b26;
+    --color-bg-inset: #16161e;
+    --color-surface: #1f2335;
+    --color-surface-alt: #24283b;
+    --color-surface-hover: #292e42;
+
+    /* Borders */
+    --color-border: #414868;
+    --color-border-subtle: #292e42;
+    --color-border-strong: #565f89;
+
+    /* Text */
+    --color-text: #c0caf5;
+    --color-text-secondary: #a9b1d6;
+    --color-text-muted: #787c99;
+    --color-text-faint: #565f89;
+    --color-text-on-accent: #1a1b26;
+
+    /* Accents */
+    --color-accent: #7aa2f7;
+    --color-accent-hover: #6593f5;
+    --color-cyan: #7dcfff;
+    --color-purple: #bb9af7;
+
+    /* Semantic states */
+    --color-success: #9ece6a;
+    --color-danger: #f7768e;
+    --color-danger-hover: #e85c75;
+    --color-disabled: #4b5263;
+
+    /* Effects */
+    --focus-ring: rgba(122, 162, 247, 0.6);
+    --focus-glow: rgba(122, 162, 247, 0.4);
+    --scrim: rgba(15, 16, 25, 0.8);
+    --shadow-modal: rgba(0, 0, 0, 0.5);
 }
 
 body {
     margin: 0;
-    color: white;
-    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-}
-
-@font-face {
-    font-family: "Nunito";
-    font-style: normal;
-    font-weight: 400;
-    src: local(""),
-    url("assets/fonts/nunito-v16-latin-regular.woff2") format("woff2");
+    background-color: var(--color-bg);
+    color: var(--color-text-secondary);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    text-align: center;
+    zoom: 1.15;
+    user-select: none;
 }
 
 #app {
     height: 100vh;
-    text-align: center;
 }

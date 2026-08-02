@@ -42,12 +42,12 @@
     align-items: flex-start;
   }
 
-  .error { color: #f7768e; }
-  .success { color: #9ece6a; }
+  .error { color: var(--color-danger); }
+  .success { color: var(--color-success); }
 
   .btn-refresh {
-    background-color: #7aa2f7;
-    color: #1a1b26;
+    background-color: var(--color-accent);
+    color: var(--color-text-on-accent);
     border: none;
     padding: 8px 16px;
     min-height: 40px;
@@ -58,6 +58,6 @@
   }
 
   .btn-refresh:hover {
-    background-color: #6593f5;
+    background-color: var(--color-accent-hover);
   }
 </style>
