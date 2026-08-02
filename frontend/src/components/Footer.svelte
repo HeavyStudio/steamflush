@@ -11,7 +11,7 @@
 <footer class="app-footer">
     <!-- Ajout des mentions légales discrètes à gauche -->
     <div class="footer-left">
-        <span>© 2026 Jonathan Alfonso | Heavy Studio</span>
+        <span>© 2026 Jonathan Alfonso</span>
     </div>
 
     <!-- Tes éléments actuels à droite -->
