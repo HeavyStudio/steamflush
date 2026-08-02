@@ -19,6 +19,7 @@
 
   const appState = createAppState();
   let showHistoryModal = $state(false);
+  let listElement = $state<HTMLElement | null>(null);
 
   $effect(() => {
     appState.refreshScan();
@@ -32,10 +33,17 @@
   function closeNotification() {
     appState.clearSuccessMessage?.();
   }
+
+  function handleWheel(event: WheelEvent) {
+    if (listElement && !showHistoryModal) {
+      listElement.scrollTop += event.deltaY;
+    }
+  }
 </script>
 
 <div
   class="app-container"
+  onwheel={handleWheel}
   use:spatialNavigation={{
     enabled:
       !appState.isLoading && !showHistoryModal && !appState.successMessage,
@@ -102,7 +110,7 @@
               appState.totalSize,
             )}:
           </p>
-          <ul>
+          <ul bind:this={listElement}>
             {#each appState.orphans as app (app.appID)}
               <OrphanCard
                 name={app.name}
