@@ -100,7 +100,7 @@
     .modal-backdrop {
         position: absolute;
         inset: 0;
-        background: rgba(15, 16, 25, 0.8);
+        background: var(--scrim);
         backdrop-filter: blur(6px);
         pointer-events: none;
     }
@@ -108,17 +108,17 @@
     .modal-container {
         position: relative;
         z-index: 1001;
-        background-color: #1f2335;
-        border: 1px solid #414868;
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
         width: 100%;
         max-width: 420px;
         border-radius: 8px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 16px 32px var(--shadow-modal);
         overflow: hidden;
-        color: #a9b1d6;
+        color: var(--color-text-secondary);
         padding: 1.5rem;
         text-align: center;
         pointer-events: auto;
@@ -137,7 +137,7 @@
         width: 48px;
         height: 48px;
         background-color: rgba(158, 206, 106, 0.15);
-        color: #9ece6a;
+        color: var(--color-success);
         font-size: 1.5rem;
         font-weight: bold;
         border-radius: 50%;
@@ -145,19 +145,19 @@
         align-items: center;
         justify-content: center;
         margin-bottom: 1rem;
-        border: 1px solid #9ece6a;
+        border: 1px solid var(--color-success);
     }
 
     .message {
         font-size: 1.05rem;
-        color: #c0caf5;
+        color: var(--color-text);
         margin: 0 0 0.5rem 0;
         font-weight: 500;
     }
 
     .timer-text {
         font-size: 0.8rem;
-        color: #565f89;
+        color: var(--color-text-faint);
         font-family: "JetBrains Mono", monospace;
     }
 
@@ -169,8 +169,8 @@
     }
 
     .btn-ok {
-        background-color: #7aa2f7;
-        color: #15161e;
+        background-color: var(--color-accent);
+        color: var(--color-text-on-accent);
         border: none;
         padding: 0.6rem 2rem;
         border-radius: 6px;
@@ -183,8 +183,8 @@
     .btn-ok:hover,
     .btn-ok:focus,
     .btn-ok:focus-visible {
-        background-color: #bb9af7;
-        outline: 2px solid #7dcfff;
+        background-color: var(--color-purple);
+        outline: 2px solid var(--color-cyan);
         outline-offset: 2px;
     }
 </style>

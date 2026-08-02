@@ -35,8 +35,8 @@
         align-items: center;
         padding: 14px 24px;
         font-size: 0.85rem; /* Légèrement plus petit pour ne pas distraire */
-        color: #7885b5;
-        border-top: 1px solid #2f334d;
+        color: var(--color-text-muted);
+        border-top: 1px solid var(--color-border-subtle);
         margin-top: auto;
     }
 
@@ -69,9 +69,9 @@
         opacity: 1;
         width: 40px;
         height: 40px;
-        border-color: #7aa2f7;
+        border-color: var(--color-accent);
         border-radius: 6px;
         outline: none !important;
-        box-shadow: inset 0 0 0 1px #7aa2f7;
+        box-shadow: inset 0 0 0 1px var(--color-accent);
     }
 </style>

@@ -175,7 +175,7 @@
     .modal-backdrop {
         position: absolute;
         inset: 0;
-        background: rgba(15, 16, 25, 0.8);
+        background: var(--scrim);
         backdrop-filter: blur(6px);
         pointer-events: none;
     }
@@ -183,24 +183,24 @@
     .modal-container {
         position: relative;
         z-index: 1001;
-        background-color: #1f2335;
-        border: 1px solid #414868;
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
         width: 100%;
         max-width: 600px;
         max-height: 85vh;
         border-radius: 8px;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 16px 32px var(--shadow-modal);
         overflow: hidden;
-        color: #a9b1d6;
+        color: var(--color-text-secondary);
         pointer-events: auto;
     }
 
     .modal-header {
         padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid #292e42;
-        background-color: #1a1b26;
+        border-bottom: 1px solid var(--color-border-subtle);
+        background-color: var(--color-bg);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -208,7 +208,7 @@
 
     .modal-header h2 {
         font-family: "Rajdhani", sans-serif;
-        color: #7aa2f7;
+        color: var(--color-accent);
         font-size: 1.4rem;
         margin: 0;
         text-transform: uppercase;
@@ -217,20 +217,20 @@
 
     .history-subtitle {
         font-size: 0.875rem;
-        color: #787c99;
+        color: var(--color-text-muted);
         margin: 0.25rem 0 0 0;
     }
 
     .highlight {
         font-family: "JetBrains Mono", monospace;
-        color: #7dcfff;
+        color: var(--color-cyan);
         font-weight: 700;
     }
 
     .close-btn {
         background: transparent;
         border: none;
-        color: #787c99;
+        color: var(--color-text-muted);
         font-size: 1.2rem;
         cursor: pointer;
         padding: 0.25rem 0.5rem;
@@ -244,9 +244,9 @@
     .close-btn:hover,
     .close-btn:focus,
     .close-btn:focus-visible {
-        color: #c0caf5;
-        background-color: #292e42;
-        outline: 2px solid #7aa2f7;
+        color: var(--color-text);
+        background-color: var(--color-surface-hover);
+        outline: 2px solid var(--color-accent);
     }
 
     .modal-body {
@@ -260,7 +260,7 @@
 
     .state-text {
         text-align: center;
-        color: #787c99;
+        color: var(--color-text-muted);
         padding: 2.5rem 0;
     }
 
@@ -274,8 +274,8 @@
         flex-direction: column;
 
         /* 2. Style visuel */
-        background-color: #24283b;
-        border: 2px solid #414868;
+        background-color: var(--color-surface-alt);
+        border: 2px solid var(--color-border);
         border-radius: 6px;
 
         /* 3. Bloque tout recalcul de ligne / texte natif aux boutons */
@@ -298,12 +298,12 @@
     .history-card:hover,
     .history-card:focus,
     .history-card:focus-visible {
-        background-color: #292e42;
-        border-color: #7aa2f7;
+        background-color: var(--color-surface-hover);
+        border-color: var(--color-accent);
         outline: none !important;
         box-shadow:
-            0 0 0 2px #7aa2f7,
-            0 0 12px rgba(122, 162, 247, 0.4);
+            0 0 0 2px var(--color-accent),
+            0 0 12px var(--focus-glow);
     }
 
     .card-summary {
@@ -318,13 +318,13 @@
     .date {
         font-family: "JetBrains Mono", monospace;
         font-size: 0.75rem;
-        color: #565f89;
+        color: var(--color-text-faint);
     }
 
     .title {
         font-size: 0.95rem;
         font-weight: 600;
-        color: #c0caf5;
+        color: var(--color-text);
         margin-top: 0.2rem;
     }
 
@@ -336,19 +336,19 @@
         font-family: "JetBrains Mono", monospace;
         font-size: 0.95rem;
         font-weight: 700;
-        color: #7dcfff;
+        color: var(--color-cyan);
     }
 
     .toggle-text {
         font-size: 0.75rem;
-        color: #787c99;
+        color: var(--color-text-muted);
         margin-top: 0.2rem;
     }
 
     .card-details {
         margin-top: 0.75rem;
         padding-top: 0.75rem;
-        border-top: 1px solid #292e42;
+        border-top: 1px solid var(--color-border-subtle);
         display: flex;
         flex-direction: column;
         gap: 0.4rem;
@@ -359,10 +359,10 @@
         justify-content: space-between;
         align-items: center;
         font-size: 0.85rem;
-        background-color: #1a1b26;
+        background-color: var(--color-bg);
         padding: 0.4rem 0.6rem;
         border-radius: 4px;
-        color: #a9b1d6;
+        color: var(--color-text-secondary);
     }
 
     .item-name {
@@ -371,34 +371,34 @@
 
     .app-id {
         font-family: "JetBrains Mono", monospace;
-        color: #565f89;
+        color: var(--color-text-faint);
         font-size: 0.75rem;
     }
 
     .item-size {
         font-family: "JetBrains Mono", monospace;
-        color: #7dcfff;
+        color: var(--color-cyan);
         font-size: 0.8rem;
     }
 
     .modal-footer {
         padding: 1rem 1.25rem;
-        border-top: 1px solid #292e42;
-        background-color: #1a1b26;
+        border-top: 1px solid var(--color-border-subtle);
+        background-color: var(--color-bg);
         display: flex;
         justify-content: flex-end;
     }
 
     .btn-close {
-        background-color: #414868;
-        color: #c0caf5;
+        background-color: var(--color-border);
+        color: var(--color-text);
     }
 
     .btn-close:hover:not(:disabled),
     .btn-close:focus,
     .btn-close:focus-visible {
-        background-color: #565f89;
+        background-color: var(--color-border-strong);
         color: #ffffff;
-        outline: 2px solid #7aa2f7;
+        outline: 2px solid var(--color-accent);
     }
 </style>

@@ -1,17 +1,6 @@
 /* Import font families from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600&family=Rajdhani:wght@600;700&display=swap');
 
-
-:global(body) {
-  margin: 0;
-  /* Apply the main interface font globally */
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  background-color: #1a1b26;
-  color: #a9b1d6;
-  zoom: 1.15;
-  user-select: none;
-}
-
 .app-container {
   display: flex;
   flex-direction: column;
@@ -32,7 +21,7 @@ main {
 
 .results h2 {
   font-family: 'Rajdhani', sans-serif;
-  color: #7aa2f7;
+  color: var(--color-accent);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -51,7 +40,7 @@ main {
 }
 
 .warning-text {
-  color: #9aa5ce;
+  color: var(--color-text-secondary);
   margin-bottom: 1rem;
   margin-top: 0;
   opacity: 0.8;
@@ -96,41 +85,41 @@ button {
 
 button:focus,
 button:focus-visible {
-  outline: 3px solid #7aa2f7;
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
-  border-color: #7aa2f7;
-  box-shadow: 0 0 12px rgba(122, 162, 247, 0.6);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 12px var(--focus-ring);
 }
 
 button:disabled {
-  background-color: #4b5263;
+  background-color: var(--color-disabled);
   cursor: not-allowed;
   opacity: 0.6;
   color: #ffffff;
 }
 
 .btn-danger-all {
-  background-color: #f7768e;
-  color: #1a1b26;
+  background-color: var(--color-danger);
+  color: var(--color-text-on-accent);
 }
 
 .btn-danger-all:hover:not(:disabled),
 .btn-danger-all:focus:not(:disabled) {
-  background-color: #e85c75;
+  background-color: var(--color-danger-hover);
 }
 
 .btn-refresh {
-  background-color: #414868;
-  color: #1a1b26;
+  background-color: var(--color-border);
+  color: var(--color-text-on-accent);
 }
 
 .btn-refresh:hover:not(:disabled),
 .btn-refresh:focus:not(:disabled) {
-  background-color: #565f89;
+  background-color: var(--color-border-strong);
 }
 
 button:hover:not(:disabled) {
-  border: 2px solid #7aa2f7;
+  border: 2px solid var(--color-accent);
   padding: 4px 12px;
 }
 
@@ -141,27 +130,27 @@ button:hover:not(:disabled) {
 }
 
 .toolbar button {
-  background-color: #2b3d52;
-  color: #c6d4df;
-  border: 1px solid #4a5a6a;
+  background-color: var(--color-border);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   cursor: pointer;
 }
 
 .toolbar button:hover {
-  background-color: #3b5066;
+  background-color: var(--color-border-strong);
 }
 
 .toolbar button.active {
-  color: #7aa2f7;
-  border-color: #7aa2f7;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
   font-weight: 700;
 }
 
 .toolbar button:focus-visible,
 .btn-refresh:focus-visible {
-  outline: 2px solid #7aa2f7;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
-  background-color: #4e5968;
+  background-color: var(--color-border-strong);
 }
 
 .history-trigger {
@@ -172,16 +161,16 @@ button:hover:not(:disabled) {
 }
 
 .history-btn {
-  background-color: #24283b;
-  color: #c0caf5;
-  border: 1px solid #414868;
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   padding: 8px 16px;
   border-radius: 6px;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px var(--shadow-modal);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -189,9 +178,9 @@ button:hover:not(:disabled) {
 }
 
 .history-btn:hover:not(:disabled) {
-  background-color: #292e42;
-  border: 1px solid #7aa2f7;
-  color: #7dcfff;
+  background-color: var(--color-surface-hover);
+  border: 1px solid var(--color-accent);
+  color: var(--color-cyan);
   padding: 8px 16px; /* Annule la réduction de padding globale du button:hover */
   transform: translateY(-1px);
 }
