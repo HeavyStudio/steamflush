@@ -34,15 +34,16 @@
   }
 </script>
 
-<div class="app-container">
+<div
+  class="app-container"
+  use:spatialNavigation={{
+    enabled:
+      !appState.isLoading && !showHistoryModal && !appState.successMessage,
+  }}
+>
   <Header />
 
-  <main
-    use:spatialNavigation={{
-      enabled:
-        !appState.isLoading && !showHistoryModal && !appState.successMessage,
-    }}
-  >
+  <main>
     <section class="content">
       <StatusMessage
         isLoading={appState.isLoading}
