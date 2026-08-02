@@ -22,6 +22,11 @@ var ErrNotSteamApp = fmt.Errorf("not a valid steam app")
 func GetAppNamesBatch(appIDs []string) (map[string]string, error) {
 	cache := loadCache()
 	results := make(map[string]string)
+
+	// fetched holds names resolved by the goroutines. The workers only ever
+	// touch this map (guarded by mu) — never `cache` directly — so the
+	// unlocked cache reads below stay free of a concurrent map read/write race.
+	fetched := make(map[string]string)
 	var mu sync.Mutex
 	g := new(errgroup.Group)
 	g.SetLimit(5)
@@ -39,8 +44,9 @@ func GetAppNamesBatch(appIDs []string) (map[string]string, error) {
 			name, err := GetAppName(id)
 			if err != nil {
 				if err == ErrNotSteamApp {
+					// Cache the negative result so we don't re-query non-apps.
 					mu.Lock()
-					cache[id] = ""
+					fetched[id] = ""
 					mu.Unlock()
 					return nil
 				}
@@ -48,14 +54,23 @@ func GetAppNamesBatch(appIDs []string) (map[string]string, error) {
 			}
 
 			mu.Lock()
-			results[id] = name
-			cache[id] = name
+			fetched[id] = name
 			mu.Unlock()
 			return nil
 		})
 	}
 
 	err := g.Wait()
+
+	// All goroutines have returned: safe to merge their results and to expose
+	// the successfully resolved names to the caller.
+	for id, name := range fetched {
+		cache[id] = name
+		if name != "" {
+			results[id] = name
+		}
+	}
+
 	saveCache(cache)
 	return results, err
 }
