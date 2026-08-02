@@ -2,7 +2,7 @@
 /build/
 /frontend/dist/
 /frontend/build/
-/node_modules/
+node_modules/
 
 # Go artifacts
 *.exe
