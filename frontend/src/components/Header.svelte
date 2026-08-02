@@ -1,43 +1,59 @@
+<script lang="ts">
+  import testLogoTr from '../assets/images/logo.png';
+</script>
+
 <header>
-  <h1>SteamFlush</h1>
-  <p class="subtitle">Clean what Steam leaves behind</p>
+  <div class="logo-group">
+    <img src={testLogoTr} alt="SteamFlush Otter Logo TR" class="header-logo" />
+    <div class="title-container">
+      <h1>STEAMFLUSH</h1>
+      <p class="subtitle">CLEAN WHAT STEAM LEAVES BEHIND</p>
+    </div>
+  </div>
 </header>
 <hr />
 
 <style>
   header {
-    /* Ajoute un petit padding si nécessaire */
-    padding: 1rem 0;
+    background-color: #1a1b26;
+    padding: 1.5rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #414868;
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .header-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .title-container {
+    text-align: left;
   }
 
   h1 {
     font-family: 'Rajdhani', sans-serif;
-    /* Bleu Steam caractéristique ou blanc cassé */
-    color: #ffffff; 
-    margin-bottom: 0.2rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
+    color: #ffffff;
+    margin: 0;
+    font-size: 2.5rem;
     font-weight: 700;
-    /* Petit effet de lueur pour le côté tech */
-    text-shadow: 0 0 10px rgba(103, 193, 245, 0.2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .subtitle {
-    /* Gris bleu plus doux, typique de l'interface Steam */
-    color: #67c1f5; 
-    font-size: 0.9rem;
-    margin-top: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
+    color: #a9b1d6;
+    margin: -0.25rem 0 0 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
     opacity: 0.8;
-  }
-
-  hr {
-    border: 0;
-    height: 1px;
-    /* Gradient pour un effet plus raffiné */
-    background: linear-gradient(90deg, #1b2838 0%, #67c1f5 50%, #1b2838 100%);
-    margin: 1.5rem 0;
-    opacity: 0.5;
   }
 </style>
