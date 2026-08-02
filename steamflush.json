@@ -1,5 +1,5 @@
 {
-    "app-id": "com.github.heavystudio.steamflush",
+    "app-id": "io.github.heavystudio.steamflush",
     "runtime": "org.gnome.Platform",
     "runtime-version": "50",
     "sdk": "org.gnome.Sdk",

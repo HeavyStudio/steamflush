@@ -1,0 +1,17 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SteamFlush
+GenericName=Steam Orphan File Cleaner
+GenericName[fr]=Nettoyeur de fichiers orphelins Steam
+Comment=Clean what Steam leaves behind
+Comment[fr]=Nettoyez ce que Steam laisse derrière lui
+Exec=steamflush
+Icon=io.github.heavystudio.steamflush
+Terminal=false
+Categories=Utility;FileTools;
+Keywords=Steam;cache;cleaner;disk;orphan;shader;
+Keywords[fr]=Steam;cache;nettoyage;disque;orphelin;shader;
+MimeType=x-scheme-handler/steamflush;
+X-GNOME-UsesNotifications=true
+StartupWMClass=steamflush
