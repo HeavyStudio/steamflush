@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.heavystudio.steamflush</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <name>SteamFlush</name>
+  <summary>Clean what Steam leaves behind</summary>
+  <summary xml:lang="fr">Nettoyez ce que Steam laisse derrière lui</summary>
+
+  <developer id="io.github.heavystudio">
+    <name>Jonathan Alfonso</name>
+  </developer>
+
+  <description>
+    <p>
+      SteamFlush helps you reclaim disk space on your Steam Deck or Linux PC by
+      identifying and deleting remnant files from uninstalled Steam games.
+    </p>
+    <p xml:lang="fr">
+      SteamFlush vous aide à récupérer de l'espace disque sur votre Steam Deck ou PC Linux en identifiant et supprimant les fichiers restants des jeux Steam désinstallés.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.github.heavystudio.steamflush.desktop</launchable>
+  
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/HeavyStudio/steamflush/refs/heads/main/screenshots/main_window.png</image>
+      <caption>Detected orphan files list</caption>
+      <caption xml:lang="fr">Liste des fichiers orphelins détectés</caption>
+    </screenshot>
+
+    <screenshot>
+        <image>https://raw.githubusercontent.com/HeavyStudio/steamflush/refs/heads/main/screenshots/clean_history.png</image>
+        <caption>Detailed deletion history log</caption>
+        <caption xml:lang="fr">Historique détaillé des nettoyages</caption>
+    </screenshot>
+
+    <screenshot>
+        <image>https://raw.githubusercontent.com/HeavyStudio/steamflush/refs/heads/main/screenshots/system_clean.png</image>
+        <caption>Clean state notification</caption>
+        <caption xml:lang="fr">Écran de confirmation lorsque le système est propre</caption>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/HeavyStudio/steamflush</url>
+  <url type="bugtracker">https://github.com/HeavyStudio/steamflush/issues</url>
+  
+  <provides>
+    <binary>steamflush</binary>
+  </provides>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="1.0.0" date="2026-08-02">
+      <description>
+        <p>Current release with UI updates and otter mascot branding.</p>
+      </description>
+    </release>
+  </releases>
+</component>
