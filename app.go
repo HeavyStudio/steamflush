@@ -56,16 +56,12 @@ func (a *App) DeleteOrphan(appID string) error {
 		return fmt.Errorf("steam scanner service is not initialized")
 	}
 
-	// 1. Récupérer les orphelins pour extraire les métadonnées de celui qu'on va supprimer
-	orphans, err := a.scanner.FindOrphans()
-	var targetApp *steam.AppInfo
-	if err == nil {
-		for _, orphan := range orphans {
-			if orphan.AppID == appID {
-				targetApp = &orphan
-				break
-			}
-		}
+	// 1. Résoudre les métadonnées du seul app ciblé (la taille doit être lue
+	// avant la suppression). Pas de scan complet ni de requêtes réseau pour
+	// tous les orphelins comme auparavant.
+	target, err := a.scanner.GetOrphanInfo(appID)
+	if err != nil {
+		return err
 	}
 
 	// 2. Supprimer le dossier physique
@@ -74,18 +70,16 @@ func (a *App) DeleteOrphan(appID string) error {
 	}
 
 	// 3. Enregistrer la session dans l'historique
-	if targetApp != nil {
-		items := []steam.CleanedItem{
-			{
-				AppID: targetApp.AppID,
-				Name:  targetApp.Name,
-				Size:  targetApp.Size,
-			},
-		}
+	items := []steam.CleanedItem{
+		{
+			AppID: target.AppID,
+			Name:  target.Name,
+			Size:  target.Size,
+		},
+	}
 
-		if saveErr := steam.AddCleanRecord(1, targetApp.Size, items); saveErr != nil {
-			runtime.LogErrorf(a.ctx, "Failed to save history record: %v", saveErr)
-		}
+	if saveErr := steam.AddCleanRecord(1, target.Size, items); saveErr != nil {
+		runtime.LogErrorf(a.ctx, "Failed to save history record: %v", saveErr)
 	}
 
 	return nil

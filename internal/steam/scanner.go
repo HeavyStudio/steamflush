@@ -82,6 +82,33 @@ func (s *Scanner) FindOrphans() ([]AppInfo, error) {
 	return results, nil
 }
 
+// GetOrphanInfo resolves the display metadata (name + size) for a single
+// shadercache entry without scanning the whole directory. The size is read
+// before any deletion; the name is resolved cache-first, so in the normal
+// flow (the name was already cached during the scan) this triggers no network
+// request. Falls back to a placeholder name if resolution fails.
+func (s *Scanner) GetOrphanInfo(appID string) (AppInfo, error) {
+	if appID == "" || strings.Trim(appID, "0123456789") != "" {
+		return AppInfo{}, fmt.Errorf("invalid appID")
+	}
+
+	folderPath := filepath.Join(s.info.ShaderCacheDir, appID)
+	size := s.GetDirectorySize(folderPath)
+
+	names, err := GetAppNamesBatch([]string{appID})
+	if err != nil {
+		// Non-fatal: keep the size and fall back to a placeholder name.
+		fmt.Printf("Warning: failed to fetch name for app %s: %v\n", appID, err)
+	}
+
+	name := names[appID]
+	if name == "" {
+		name = "Unknown Game (" + appID + ")"
+	}
+
+	return AppInfo{AppID: appID, Name: name, Size: size}, nil
+}
+
 // GetDirectorySize calculates the total size of a directory by walking its files
 func (s *Scanner) GetDirectorySize(path string) int64 {
 	var size int64
