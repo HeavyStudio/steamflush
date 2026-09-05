@@ -23,3 +23,7 @@ Thumbs.db
 .flatpak-builder/
 repo/
 *.flatpak
+
+# Jekyll
+docs/_site/
+docs/.jekyll-cache/
