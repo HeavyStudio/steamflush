@@ -1,4 +1,7 @@
 title: SteamFlush
 description: Orphaned Steam shader cache cleaner for Linux and Steam Deck.
+baseurl: "/steamflush"
+url: "https://heavystudio.github.io"
+
 sass:
   quiet_deps: true
