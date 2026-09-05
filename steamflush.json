@@ -6,22 +6,29 @@
     "command": "steamflush",
     "finish-args": [
         "--share=ipc",
+        "--share=network",
+        "--socket=wayland",
         "--socket=fallback-x11",
         "--device=dri",
-        "--filesystem=home"
+        "--filesystem=~/.steam",
+        "--filesystem=~/.local/share/Steam",
+        "--filesystem=~/.var/app/com.valvesoftware.Steam"
     ],
     "modules": [
         {
             "name": "steamflush",
             "buildsystem": "simple",
             "build-commands": [
-                "install -D steamflush /app/bin/steamflush"
+                "install -Dm755 steamflush /app/bin/steamflush",
+                "install -Dm644 io.github.heavystudio.steamflush.desktop /app/share/applications/io.github.heavystudio.steamflush.desktop",
+                "install -Dm644 io.github.heavystudio.steamflush.metainfo.xml /app/share/metainfo/io.github.heavystudio.steamflush.metainfo.xml",
+                "install -Dm644 logo.png /app/share/icons/hicolor/512x512/apps/io.github.heavystudio.steamflush.png"
             ],
             "sources": [
-                {
-                    "type": "file",
-                    "path": "build/bin/steamflush"
-                }
+                { "type": "file", "path": "build/bin/steamflush" },
+                { "type": "file", "path": "build/linux/io.github.heavystudio.steamflush.desktop" },
+                { "type": "file", "path": "build/linux/io.github.heavystudio.steamflush.metainfo.xml" },
+                { "type": "file", "path": "build/logo.png" }
             ]
         }
     ]
